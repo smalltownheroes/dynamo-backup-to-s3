@@ -24,6 +24,7 @@ Can be run as a command line script or as an npm module.
     --aws-key                        AWS access key. Will use AWS_ACCESS_KEY_ID env var if --aws-key not set
     --aws-secret                     AWS secret key. Will use AWS_SECRET_ACCESS_KEY env var if --aws-secret not set
     --aws-region                     AWS region. Will use AWS_DEFAULT_REGION env var if --aws-region not set
+    --aws-endpoint                   AWS endpoint. Will use AWS_DEFAULT_ENDPOINT env var if --aws-endpoint not set
 ```
 
 # npm module usage
@@ -40,7 +41,8 @@ var backup = new DynamoBackup({
     stopOnFailure: true,
     awsAccessKey: /* AWS access key */,
     awsSecretKey: /* AWS secret key */,
-    awsSecretKey: /* AWS region */
+    awsRegion: /* AWS region */,
+    awsEndpoint: /* AWS endpoint */
 });
 
 backup.on('error', function(data) {
@@ -56,7 +58,7 @@ backup.on('end-backup', function(tableName) {
     console.log('Done copying table ' + tableName);
 });
 
-backup.backupAllTables(function() {
+backup.backupAllTables(function(err) {
     console.log('Finished backing up DynamoDB');
 });
 
@@ -76,7 +78,8 @@ var options = {
     stopOnFailure:  /* whether or not to continue backing up if a single table fails to back up */,
     awsAccessKey:   /* AWS access key */,
     awsSecretKey:   /* AWS secret key */,
-    awsSecretKey:   /* AWS region */,
+    awsRegion:   /* AWS region */,
+    awsEndpoint: /* AWS endpoint */,
     backupPath:     /* folder to save backups in.  default: 'DynamoDB-backup-YYYY-MM-DD-HH-mm-ss'
 };
 
@@ -139,7 +142,7 @@ __Arguments__
 
 * `tableName` - name of the table to backup
 * `backupPath` - (optional) the path to use for the backup.
-  The iterator is passed a `callback(err)` which must be called once it has 
-  completed. If no error has occurred, the `callback` should be run without 
+  The iterator is passed a `callback(err)` which must be called once it has
+  completed. If no error has occurred, the `callback` should be run without
   arguments or with an explicit `null` argument.
 * `callback(err)` - A callback which is called when the table has finished backing up, or an error occurs
